@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "440456349455",
+    "project_id": "social-app-eab6e",
+    "storage_bucket": "social-app-eab6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440456349455:android:768fc66c10754e68ba607a",
+        "android_client_info": {
+          "package_name": "com.example.social_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440456349455-eeu7ehrap2d3ddbs9i9t9ae684nm8ubv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAip7AdITzf1Y9V-FO4ZjWWdTVwOexlWck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440456349455-eeu7ehrap2d3ddbs9i9t9ae684nm8ubv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440456349455:android:7298ae629c6431acba607a",
+        "android_client_info": {
+          "package_name": "com.learning.social_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440456349455-mbfdslic5sv17n9tg2hpocc8gbosbc0u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learning.social_app",
+            "certificate_hash": "50a5699c828ee7f3c9e4fa07db1d78f5abb5418e"
+          }
+        },
+        {
+          "client_id": "440456349455-eeu7ehrap2d3ddbs9i9t9ae684nm8ubv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAip7AdITzf1Y9V-FO4ZjWWdTVwOexlWck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440456349455-eeu7ehrap2d3ddbs9i9t9ae684nm8ubv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
