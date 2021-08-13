@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_app/layout/home_layout.dart';
 import 'package:social_app/modules/auth/login/login_screen.dart';
 import 'package:social_app/modules/auth/sign_up/sign_up_screen.dart';
+import 'package:social_app/modules/settings/edit_profile/edit_profile_screen.dart';
 import 'package:social_app/shared/local/CachHelper.dart';
 import 'package:social_app/shared/my_bloc_observer.dart';
 import 'package:social_app/shared/network/dio_helper.dart';
@@ -29,6 +30,7 @@ void main() async {
         loginRouteName: (context) => LoginScreen(),
         signUpRouteName: (context) => SignUpScreen(),
         homeRouteName: (context) => HomeLayout(),
+        editProfileRouteName: (context) => EditProfileScreen(),
       },
     ),
   );
@@ -37,3 +39,4 @@ void main() async {
 final loginRouteName = '/login';
 final signUpRouteName = '/signUp';
 final homeRouteName = '/home';
+final editProfileRouteName = '/home/editProfile';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void navigateTo(context, name) {
-  Navigator.of(context).pushNamed(name);
+void navigateTo(context, name, {Object? arguments}) {
+  Navigator.of(context).pushNamed(name, arguments: arguments);
 }
 
 void navigateToAndRemoveLast(context, name) {
@@ -16,8 +16,8 @@ Widget defaultFormField({
   required TextInputType inputType,
   required TextEditingController controller,
   void Function()? onSuffixTapped,
-  IconData? prefix,
-  IconData? suffix,
+  Icon? prefix,
+  Icon? suffix,
   bool obscure = false,
   String? Function(String?)? validator,
 }) =>
@@ -25,12 +25,12 @@ Widget defaultFormField({
       style: getTextTheme(context).bodyText1,
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.auto,
-        labelText: label,
         border: OutlineInputBorder(gapPadding: 8),
-        prefixIcon: Icon(prefix),
-        suffixIcon: InkWell(
-          child: Icon(suffix),
-          onTap: onSuffixTapped,
+        labelText: label,
+        prefixIcon: prefix,
+        suffixIcon: IconButton(
+          icon: Center(child: suffix),
+          onPressed: onSuffixTapped,
         ),
       ),
       obscureText: obscure,

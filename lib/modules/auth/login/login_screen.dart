@@ -31,46 +31,50 @@ class LoginScreen extends StatelessWidget {
         },
         builder: (BuildContext context, Object? state) {
           return Scaffold(
-            body: Stack(
-              children: [
-                Container(
-                  height: 150,
-                  width: double.infinity,
-                  child: buildTopTitle(context),
-                ),
-                Center(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'LOGIN',
-                              style: getTextTheme(context).headline4?.copyWith(color: Colors.black),
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              'Login now to browse our hot offers',
-                              style: getTextTheme(context).subtitle2,
-                            ),
-                            SizedBox(height: 50),
-                            buildEmailForm(context),
-                            SizedBox(height: 20),
-                            buildPasswordForm(context),
-                            SizedBox(height: 20),
-                            buildLoginButton(context, state),
-                            SizedBox(height: 20.0),
-                            buildSignupText(context),
-                          ],
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 150,
+                    width: double.infinity,
+                    child: buildTopTitle(context),
+                  ),
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'LOGIN',
+                                style: getTextTheme(context).headline4?.copyWith(color: Colors.black),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                'Login now to browse our hot offers',
+                                style: getTextTheme(context).subtitle2,
+                              ),
+                              SizedBox(height: 50),
+                              buildEmailForm(context),
+                              SizedBox(height: 20),
+                              buildPasswordForm(context),
+                              SizedBox(height: 20),
+                              buildLoginButton(context, state),
+                              SizedBox(height: 20.0),
+                              buildSignupText(context),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           );
         },
@@ -119,10 +123,10 @@ class LoginScreen extends StatelessWidget {
       context: context,
       label: 'password',
       inputType: TextInputType.visiblePassword,
-      prefix: Icons.lock_outlined,
+      prefix: Icon(Icons.lock_outlined),
       obscure: AuthCubit.of(context).isObscure,
       controller: passwordController,
-      suffix: AuthCubit.of(context).isObscure ? Icons.visibility : Icons.visibility_off,
+      suffix: Icon(AuthCubit.of(context).isObscure ? Icons.visibility : Icons.visibility_off),
       onSuffixTapped: () {
         AuthCubit.of(context).isObscure = !AuthCubit.of(context).isObscure;
       },
@@ -134,7 +138,7 @@ class LoginScreen extends StatelessWidget {
       context: context,
       label: 'email',
       inputType: TextInputType.emailAddress,
-      prefix: Icons.email_outlined,
+      prefix: Icon(Icons.email_outlined),
       controller: emailController,
       validator: (input) {
         if (RegExp(emailRegex).hasMatch(input ?? '')) {

@@ -99,10 +99,10 @@ class SignUpScreen extends StatelessWidget {
       context: context,
       label: 'password',
       inputType: TextInputType.visiblePassword,
-      prefix: Icons.lock_outlined,
+      prefix: Icon(Icons.lock_outlined),
       obscure: AuthCubit.of(context).isObscure,
       controller: passwordController,
-      suffix: AuthCubit.of(context).isObscure ? Icons.visibility : Icons.visibility_off,
+      suffix: Icon(AuthCubit.of(context).isObscure ? Icons.visibility : Icons.visibility_off),
       onSuffixTapped: () {
         AuthCubit.of(context).isObscure = !AuthCubit.of(context).isObscure;
       },
@@ -114,7 +114,7 @@ class SignUpScreen extends StatelessWidget {
       context: context,
       label: 'email',
       inputType: TextInputType.emailAddress,
-      prefix: Icons.email_outlined,
+      prefix: Icon(Icons.email_outlined),
       controller: emailController,
       validator: (input) {
         if (RegExp(emailRegex).hasMatch(input ?? '')) {
@@ -152,7 +152,7 @@ class SignUpScreen extends StatelessWidget {
       context: context,
       label: 'name',
       inputType: TextInputType.name,
-      prefix: Icons.person_outline_outlined,
+      prefix: Icon(Icons.person_outline_outlined),
       controller: nameController,
     );
   }
@@ -162,7 +162,7 @@ class SignUpScreen extends StatelessWidget {
       context: context,
       label: 'phone',
       inputType: TextInputType.phone,
-      prefix: Icons.phone_outlined,
+      prefix: Icon(Icons.phone_outlined),
       controller: phoneController,
     );
   }

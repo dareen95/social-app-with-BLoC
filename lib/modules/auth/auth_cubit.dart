@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,16 @@ class AuthCubit extends Cubit<AuthStates> {
         uid = credentials.user!.uid;
         print(credentials.user!.email);
         print(credentials.user!.uid);
-        final userModel = UserModel(name, email, phone, credentials.user!.uid);
+        final userModel = UserModel(
+          name: name,
+          email: email,
+          phone: phone,
+          uid: credentials.user!.uid,
+          bio: 'write your bio...',
+          image:
+              'https://image.freepik.com/free-photo/handsome-young-man-white-t-shirt-cross-arms-chest-smiling-pleased_176420-21607.jpg',
+          cover: 'https://image.freepik.com/free-photo/happy-good-looking-man-glasses-pointing-finger-left_176420-21192.jpg',
+        );
         FirebaseFirestore.instance
             .collection('/users')
             .doc(credentials.user!.uid)
