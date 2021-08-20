@@ -3,72 +3,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layout/home_layout_cubit.dart';
 import 'package:social_app/main.dart';
+import 'package:social_app/models/auth/user_model.dart';
 import 'package:social_app/modules/settings/main_settings/settings_cubit.dart';
 import 'package:social_app/modules/settings/main_settings/settings_states.dart';
 import 'package:social_app/shared/components/reuseable_components.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) {
-        return SettingsCubit();
+        return SettingsCubit(context);
       },
       child: BlocConsumer<SettingsCubit, SettingsStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          final homeLayoutCubit = HomeLayoutCubit.of(context);
-          return Center(
-            child: ListView(
-              children: [
-                Container(
-                  height: 300,
-                  child: SettingsCoverAndImage(homeLayoutCubit: homeLayoutCubit),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    homeLayoutCubit.userModel?.name ?? '',
-                    style: getTextTheme(context).headline6,
-                    textAlign: TextAlign.center,
+          var homeLayoutCubit = HomeLayoutCubit.of(context);
+          return RefreshIndicator(
+            onRefresh: () async {
+              await homeLayoutCubit.getUserData();
+              homeLayoutCubit = HomeLayoutCubit.of(context);
+              setState(() {});
+            },
+            child: Center(
+              child: ListView(
+                children: [
+                  Container(
+                    height: 300,
+                    child: SettingsCoverAndImage(homeLayoutCubit: homeLayoutCubit),
                   ),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    homeLayoutCubit.userModel?.bio ?? '',
-                    style: getTextTheme(context).subtitle1,
-                    textAlign: TextAlign.center,
+                  SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      homeLayoutCubit.userModel?.name ?? '',
+                      style: getTextTheme(context).headline6,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Divider(),
-                SettingsDataRow(),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8),
-                  child: Row(
-                    children: [
-                      Expanded(child: OutlinedButton(onPressed: () {}, child: Text('Add Post'))),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: OutlinedButton(
-                          onPressed: () => navigateTo(
-                            context,
-                            editProfileRouteName,
-                            arguments: homeLayoutCubit,
+                  SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      homeLayoutCubit.userModel?.bio ?? '',
+                      style: getTextTheme(context).subtitle1,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Divider(),
+                  SettingsDataRow(),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(start: 8),
+                    child: Row(
+                      children: [
+                        Expanded(child: OutlinedButton(onPressed: () {}, child: Text('Add Post'))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: OutlinedButton(
+                            onPressed: () => navigateTo(
+                              context,
+                              editProfileRouteName,
+                              arguments: homeLayoutCubit,
+                            ),
+                            child: Icon(Icons.edit),
                           ),
-                          child: Icon(Icons.edit),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },

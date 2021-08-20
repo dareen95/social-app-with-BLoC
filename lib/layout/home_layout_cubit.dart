@@ -15,9 +15,9 @@ class HomeLayoutCubit extends Cubit<HomeLayoutStates> {
   static HomeLayoutCubit of(context) => BlocProvider.of<HomeLayoutCubit>(context);
 
   UserModel? userModel;
-  void getUserData() {
+  Future<void> getUserData() async {
     emit(HomeLayoutGetUserLoadingState());
-    FirebaseFirestore.instance.collection('/users').doc(CacheHelper.getData(key: 'uid')).get().then(
+    await FirebaseFirestore.instance.collection('/users').doc(CacheHelper.getData(key: 'uid')).get().then(
       (value) {
         userModel = UserModel.fromMap(value.data());
         emit(HomeLayoutGetUserSuccessState());
