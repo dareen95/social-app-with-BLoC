@@ -1,2 +1,1 @@
-final onBoardingSkipKey = 'onBoardingSkip';
-final tokenKey = 'token';
+final uidKey = 'uid';

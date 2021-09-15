@@ -4,7 +4,7 @@ import 'package:social_app/shared/styles/colors.dart';
 
 final lightTheme = ThemeData(
   backgroundColor: Colors.white,
-  scaffoldBackgroundColor: Colors.grey[50],
+  scaffoldBackgroundColor: Colors.white,
   primarySwatch: defaultColor,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,
@@ -20,9 +20,7 @@ final lightTheme = ThemeData(
     centerTitle: true,
     elevation: 0,
     iconTheme: IconThemeData(color: Colors.black),
-    textTheme: TextTheme(
-      headline6: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-    ),
+    titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
   ),
 );
 

@@ -1,169 +1,97 @@
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/modules/auth/auth_cubit.dart';
-import 'package:social_app/modules/auth/auth_states.dart';
-import 'package:social_app/modules/auth/login/login_screen.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/main.dart';
+import 'package:social_app/modules/auth/auth_provider.dart';
 import 'package:social_app/shared/components/reuseable_components.dart';
+import 'package:social_app/shared/styles/colors.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final phoneController = TextEditingController();
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) {
-        return AuthCubit();
-      },
-      child: BlocConsumer<AuthCubit, AuthStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return Scaffold(
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildTopTitle(context),
-                  Form(
-                    key: formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'SIGNUP',
-                            style: getTextTheme(context).headline4?.copyWith(color: Colors.black),
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            'Sign up to communicate with the WHOLE world',
-                            style: getTextTheme(context).subtitle2,
-                          ),
-                          SizedBox(height: 50),
-                          buildNameForm(context),
-                          SizedBox(height: 20),
-                          buildEmailForm(context),
-                          SizedBox(height: 20),
-                          buildPasswordForm(context),
-                          SizedBox(height: 20),
-                          buildPhoneForm(context),
-                          SizedBox(height: 20),
-                          buildSignupButton(context, state),
-                        ],
-                      ),
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: Text('REGISTER', style: getTextTheme(context).headline3?.copyWith(color: Colors.black)),
+                ),
+                Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: Text('Register now to communicate with friends', style: getTextTheme(context).bodyText1),
+                ),
+                SizedBox(height: 16),
+                defaultFormField(context: context, label: 'Username', inputType: TextInputType.name, controller: _usernameController),
+                SizedBox(height: 16),
+                defaultFormField(context: context, label: 'Email', inputType: TextInputType.emailAddress, controller: _emailController),
+                SizedBox(height: 16),
+                defaultFormField(context: context, label: 'Password', inputType: TextInputType.visiblePassword, controller: _passwordController),
+                SizedBox(height: 16),
+                defaultFormField(context: context, label: 'phone', inputType: TextInputType.phone, controller: _phoneController),
+                SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  height: 48,
+                  child: Consumer<AuthProvider>(
+                    builder: (context, authProvider, _) => ElevatedButton(
+                      child: authProvider.isSignUpButtonLoading ? CircularProgressIndicator() : Text('REGISTER'),
+                      onPressed: authProvider.isSignUpButtonLoading
+                          ? null
+                          : () async {
+                              final result = await authProvider.signUpWithEmailAndPassword(
+                                username: _usernameController.text.trim(),
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text.trim(),
+                                phone: _phoneController.text.trim(),
+                              );
+
+                              if (result == 'success') {
+                                navigateToAndRemoveLast(context, homeRouteName);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+                              }
+                            },
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Stack buildTopTitle(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-          width: double.infinity,
-          child: CustomPaint(
-            painter: CurvePainter(),
-          ),
-        ),
-        Positioned(
-          bottom: 60,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Text(
-              'Social App',
-              textAlign: TextAlign.center,
-              style: getTextTheme(context).headline6?.copyWith(color: Colors.white),
+                ),
+                SizedBox(height: 32),
+                RichText(
+                  text: TextSpan(
+                    text: 'Already have an account? ',
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: 'LOGIN',
+                        style: TextStyle(color: defaultColor),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            navigateTo(context, loginRouteName);
+                          },
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget buildPasswordForm(BuildContext context) {
-    return defaultFormField(
-      context: context,
-      label: 'password',
-      inputType: TextInputType.visiblePassword,
-      prefix: Icon(Icons.lock_outlined),
-      obscure: AuthCubit.of(context).isObscure,
-      controller: passwordController,
-      suffix: Icon(AuthCubit.of(context).isObscure ? Icons.visibility : Icons.visibility_off),
-      onSuffixTapped: () {
-        AuthCubit.of(context).isObscure = !AuthCubit.of(context).isObscure;
-      },
-    );
-  }
-
-  Widget buildEmailForm(BuildContext context) {
-    return defaultFormField(
-      context: context,
-      label: 'email',
-      inputType: TextInputType.emailAddress,
-      prefix: Icon(Icons.email_outlined),
-      controller: emailController,
-      validator: (input) {
-        if (RegExp(emailRegex).hasMatch(input ?? '')) {
-          return null;
-        }
-        return 'write a correct email address';
-      },
-    );
-  }
-
-  Container buildSignupButton(BuildContext context, state) {
-    return Container(
-      width: double.infinity,
-      height: 50.0,
-      child: ElevatedButton(
-        onPressed: state is LoginLoadingState
-            ? null
-            : () {
-                if (formKey.currentState?.validate() ?? false) {
-                  AuthCubit.of(context).signUp(
-                    name: nameController.text,
-                    email: emailController.text,
-                    password: passwordController.text,
-                    phone: phoneController.text,
-                  );
-                }
-              },
-        child: state is SignupLoadingState ? CircularProgressIndicator(color: Colors.white) : Text('SIGNUP'),
       ),
-    );
-  }
-
-  Widget buildNameForm(BuildContext context) {
-    return defaultFormField(
-      context: context,
-      label: 'name',
-      inputType: TextInputType.name,
-      prefix: Icon(Icons.person_outline_outlined),
-      controller: nameController,
-    );
-  }
-
-  Widget buildPhoneForm(BuildContext context) {
-    return defaultFormField(
-      context: context,
-      label: 'phone',
-      inputType: TextInputType.phone,
-      prefix: Icon(Icons.phone_outlined),
-      controller: phoneController,
     );
   }
 }
