@@ -4,7 +4,7 @@ import 'package:social_app/shared/styles/colors.dart';
 
 final lightTheme = ThemeData(
   backgroundColor: Colors.white,
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Colors.grey[50],
   primarySwatch: defaultColor,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,

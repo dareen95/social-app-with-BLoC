@@ -5,6 +5,8 @@ import 'package:social_app/layout/home_layout/home_layout_provider.dart';
 import 'package:social_app/modules/auth/auth_provider.dart';
 import 'package:social_app/modules/auth/sign_up/sign_up_screen.dart';
 import 'package:social_app/modules/auth/login/login_screen.dart';
+import 'package:social_app/modules/settings/edit_profile/edit_profile_screen.dart';
+import 'package:social_app/modules/settings/settings_provider.dart';
 import 'package:social_app/shared/components/shared_preferences_keys.dart';
 import 'package:social_app/shared/local/CachHelper.dart';
 import 'package:social_app/shared/network/dio_helper.dart';
@@ -16,7 +18,7 @@ void main() async {
 
   final authProvider = AuthProvider();
   final homeLayoutProvider = HomeLayoutProvider();
-
+  final settingsProvider = SettingsProvider();
   await Firebase.initializeApp();
 
   DioHelper.init();
@@ -31,8 +33,11 @@ void main() async {
       routes: {
         loginRouteName: (context) => ChangeNotifierProvider.value(value: authProvider, child: LoginScreen()),
         signUpRouteName: (context) => ChangeNotifierProvider.value(value: authProvider, child: SignUpScreen()),
-        homeRouteName: (context) => ChangeNotifierProvider.value(value: homeLayoutProvider, child: HomeLayout()),
-        // editProfileRouteName: (context) => EditProfileScreen(),
+        homeRouteName: (context) => MultiProvider(providers: [
+              ChangeNotifierProvider.value(value: homeLayoutProvider),
+              ChangeNotifierProvider.value(value: settingsProvider),
+            ], child: HomeLayout()),
+        editProfileRouteName: (context) => ChangeNotifierProvider.value(value: settingsProvider, child: EditProfileScreen()),
       },
     ),
   );
@@ -41,4 +46,4 @@ void main() async {
 final loginRouteName = '/login';
 final signUpRouteName = '/signUp';
 final homeRouteName = '/home';
-// final editProfileRouteName = '/home/editProfile';
+final editProfileRouteName = '/home/editProfile';

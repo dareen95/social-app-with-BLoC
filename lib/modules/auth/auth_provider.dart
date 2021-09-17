@@ -58,13 +58,12 @@ class AuthProvider extends ChangeNotifier {
       name: username,
       email: email,
       phone: phone,
-      uId: uid,
+      uid: uid,
       bio: 'write you bio ...',
       cover:
           'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
       image:
           'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
-      isEmailVerified: false,
     );
 
     try {

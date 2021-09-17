@@ -6,6 +6,7 @@ import 'package:social_app/modules/feed/feed_screen.dart';
 import 'package:social_app/modules/settings/main_settings/settings_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 
+
 class HomeLayoutProvider extends ChangeNotifier {
   int currentIndex = 0;
 
@@ -43,4 +44,6 @@ class HomeLayoutProvider extends ChangeNotifier {
       return e.toString();
     }
   }
+
+  
 }

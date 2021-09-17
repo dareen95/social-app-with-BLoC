@@ -44,3 +44,7 @@ Widget defaultFormField({
             return null;
           },
     );
+
+void showSnackbar(context, content) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
+}

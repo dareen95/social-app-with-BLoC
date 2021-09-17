@@ -26,12 +26,16 @@ class _HomeLayoutState extends State<HomeLayout> {
           title: Text(homeLayoutProvider.titles[homeLayoutProvider.currentIndex]),
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.notifications)), IconButton(onPressed: () {}, icon: Icon(Icons.search))],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Center(child: Text('POST', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.0))),
-          elevation: 3.0,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: homeLayoutProvider.currentIndex != 0
+            ? null
+            : FloatingActionButton(
+                onPressed: () {},
+                child: Center(child: Text('POST', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.0))),
+                elevation: 3.0,
+              ),
+        floatingActionButtonLocation:
+            MediaQuery.of(context).viewInsets.bottom == 0 ? FloatingActionButtonLocation.centerDocked : FloatingActionButtonLocation.endFloat,
+        extendBody: homeLayoutProvider.currentIndex == 0,
         bottomNavigationBar: !homeLayoutProvider.isEmailVerified
             ? null
             : BottomAppBar(
