@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:social_app/modules/feed/feed_provider.dart';
+import 'package:social_app/modules/post/post_screen.dart';
+import 'package:social_app/modules/settings/settings_provider.dart';
 import 'package:social_app/shared/components/reuseable_components.dart';
-
-final bodyT =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -12,17 +13,25 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+  //
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        // buildTopCard(context),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: List.generate(
-              5,
-              (index) => Card(
+    return ChangeNotifierProvider(
+      create: (context) => FeedProvider()..getPosts(),
+      builder: (context, _) => Consumer<FeedProvider>(
+        builder: (context, feedProvider, _) => ListView.builder(
+          itemCount: feedProvider.posts.length,
+          itemBuilder: (context, index) {
+            final posts = feedProvider.posts;
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider.value(value: feedProvider, child: PostScreen(index: index)),
+                  ),
+                );
+              },
+              child: Card(
                 elevation: 8.0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -31,19 +40,14 @@ class _FeedScreenState extends State<FeedScreen> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
-                            ),
-                            radius: 24,
-                          ),
+                          CircleAvatar(backgroundImage: NetworkImage(posts[index].userImage), radius: 24),
                           SizedBox(width: 8),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Mohamed Ahmed Shalabi', style: getTextTheme(context).bodyText1?.copyWith(fontSize: 16)),
+                              Text(posts[index].userName, style: getTextTheme(context).bodyText1?.copyWith(fontSize: 16)),
                               SizedBox(height: 8),
-                              Text('January 21, 2021 at 11:00 PM', style: getTextTheme(context).caption),
+                              Text(posts[index].dateTime, style: getTextTheme(context).caption),
                             ],
                           ),
                           Spacer(),
@@ -54,9 +58,10 @@ class _FeedScreenState extends State<FeedScreen> {
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              bodyT.length < 100 ? bodyT : bodyT.substring(100) + '...',
+                              posts[index].text.length < 100 ? posts[index].text : posts[index].text.substring(100) + '...',
                               style: getTextTheme(context).bodyText1,
                             ),
                             SizedBox(height: 16),
@@ -65,42 +70,100 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: Wrap(
                                 alignment: WrapAlignment.start,
                                 children: List.generate(
-                                  4,
-                                  (index) => Text('#Technology ', style: getTextTheme(context).bodyText1?.copyWith(color: Colors.blue)),
+                                  posts[index].hashtags.length,
+                                  (indexHash) =>
+                                      Text('#${posts[index].hashtags[indexHash]} ', style: getTextTheme(context).bodyText1?.copyWith(color: Colors.blue)),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (bodyT.length > 100) TextButton(onPressed: () {}, child: Text('Read more')),
-                      Image.network(
-                        'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
-                        fit: BoxFit.cover,
-                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      ),
+                      if (posts[index].text.length > 100) TextButton(onPressed: () {}, child: Text('Read more')),
+                      Column(children: [
+                        if (posts[index].images.length == 1)
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.network(
+                              posts[index].images[0],
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  height: (MediaQuery.of(context).size.width - 100) / 3,
+                                  width: (MediaQuery.of(context).size.width - 100) / 3,
+                                  child: Center(child: CircularProgressIndicator()),
+                                );
+                              },
+                            ),
+                          ),
+                        if (posts[index].images.length > 1 && posts[index].images.length < 10)
+                          Wrap(
+                            children: List.generate(
+                              posts[index].images.length,
+                              (indexImages) => Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: Image.network(
+                                  posts[index].images[indexImages],
+                                  fit: BoxFit.cover,
+                                  width: (MediaQuery.of(context).size.width - 100) / 3,
+                                  height: (MediaQuery.of(context).size.width - 100) / 3,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      height: (MediaQuery.of(context).size.width - 100) / 3,
+                                      width: (MediaQuery.of(context).size.width - 100) / 3,
+                                      child: Center(child: CircularProgressIndicator()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (posts[index].images.length >= 10)
+                          Wrap(children: [
+                            for (var indexImages = 0; indexImages < 8; indexImages++)
+                              Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: Image.network(
+                                  posts[index].images[indexImages],
+                                  fit: BoxFit.cover,
+                                  width: (MediaQuery.of(context).size.width - 100) / 3,
+                                  height: (MediaQuery.of(context).size.width - 100) / 3,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      height: (MediaQuery.of(context).size.width - 100) / 3,
+                                      width: (MediaQuery.of(context).size.width - 100) / 3,
+                                      child: Center(child: CircularProgressIndicator()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Container(
+                                width: (MediaQuery.of(context).size.width - 100) / 3,
+                                height: (MediaQuery.of(context).size.width - 100) / 3,
+                                color: Colors.grey,
+                                child: Center(child: Text('More images', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+                              ),
+                            )
+                          ]),
+                      ]),
                       SizedBox(height: 8.0),
                       Row(
                         children: [
                           Icon(Icons.favorite, color: Colors.red, size: 20.0),
-                          Text(' 180 likes', style: getTextTheme(context).bodyText2),
+                          Text(' ${posts[index].likesNum} likes', style: getTextTheme(context).bodyText2),
                           Spacer(),
                           Icon(Icons.mode_comment_outlined, color: Colors.blue, size: 20),
-                          Text(' 76 comments', style: getTextTheme(context).bodyText2),
                         ],
                       ),
                       SizedBox(height: 16.0),
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
-                            ),
-                            radius: 18,
-                          ),
+                          CircleAvatar(backgroundImage: NetworkImage(userModel?.image ?? ''), radius: 18),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -114,46 +177,46 @@ class _FeedScreenState extends State<FeedScreen> {
                                       bottomRight: Radius.circular(16),
                                     ),
                                     border: Border.all(width: 1.0, color: Colors.grey[200]!)),
-                                child: TextField(
-                                  decoration: InputDecoration(hintText: 'Write a comment..', border: InputBorder.none),
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        decoration: InputDecoration(hintText: 'Write a comment..', border: InputBorder.none),
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.send, color: Colors.blue),
+                                      onPressed: () async {
+                                        final result = await feedProvider.likePost(index);
+                                        if (result != 'success') {
+                                          showSnackbar(context, 'an error occurred');
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                          Icon(Icons.favorite, color: Colors.red),
-                          Text('  Like'),
+                          IconButton(
+                            icon: Icon(posts[index].isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red),
+                            onPressed: () async {
+                              final result = await feedProvider.likePost(index);
+                              if (result != 'success') {
+                                showSnackbar(context, 'an error occurred');
+                              }
+                            },
+                          ),
                         ],
                       )
                     ],
                   ),
                 ),
               ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Container buildTopCard(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: AspectRatio(
-            aspectRatio: 16.0 / 9.0,
-            child: Image.network(
-              'https://image.freepik.com/free-photo/photo-attractive-bearded-young-man-with-cherful-expression-makes-okay-gesture-with-both-hands-likes-something-dressed-red-casual-t-shirt-poses-against-white-wall-gestures-indoor_273609-16239.jpg',
-              fit: BoxFit.cover,
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

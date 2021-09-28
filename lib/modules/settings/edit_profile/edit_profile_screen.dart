@@ -19,7 +19,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<SettingsProvider>(context, listen: false).userModel;
+    // final userModel = Provider.of<SettingsProvider>(context, listen: false).userModel;
     nameController.text = userModel?.name! ?? '';
     bioController.text = userModel?.bio! ?? '';
     phoneController.text = userModel?.phone! ?? '';
@@ -61,7 +61,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     height: 200,
                     width: double.infinity,
                     child: Consumer<SettingsProvider>(
-                      builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+                      builder: (context, settingsProvider, _) => userModel == null
                           ? Center(child: CircularProgressIndicator())
                           : Uri.parse(settingsProvider.coverImage).isAbsolute
                               ? Image.network(settingsProvider.coverImage, fit: BoxFit.cover)
@@ -93,10 +93,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                           radius: 70,
                           child: Consumer<SettingsProvider>(
-                              builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+                              builder: (context, settingsProvider, _) => userModel == null
                                   ? Center(child: CircularProgressIndicator())
                                   : Uri.parse(settingsProvider.profileImage).isAbsolute
-                                      ? CircleAvatar(backgroundImage: NetworkImage(settingsProvider.userModel?.image ?? ''), radius: 66)
+                                      ? CircleAvatar(backgroundImage: NetworkImage(userModel?.image ?? ''), radius: 66)
                                       : CircleAvatar(backgroundImage: FileImage(File(settingsProvider.profileImage)), radius: 66)),
                         ),
                         Consumer<SettingsProvider>(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_app/layout/home_layout/home_layout_provider.dart';
+import 'package:social_app/main.dart';
+import 'package:social_app/shared/components/reuseable_components.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -26,10 +28,12 @@ class _HomeLayoutState extends State<HomeLayout> {
           title: Text(homeLayoutProvider.titles[homeLayoutProvider.currentIndex]),
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.notifications)), IconButton(onPressed: () {}, icon: Icon(Icons.search))],
         ),
-        floatingActionButton: homeLayoutProvider.currentIndex != 0
+        floatingActionButton: homeLayoutProvider.currentIndex != 0 || !homeLayoutProvider.isEmailVerified
             ? null
             : FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  navigateTo(context, newPostRouteName);
+                },
                 child: Center(child: Text('POST', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.0))),
                 elevation: 3.0,
               ),

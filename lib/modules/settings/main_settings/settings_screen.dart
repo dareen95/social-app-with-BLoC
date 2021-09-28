@@ -34,10 +34,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 200,
                 width: double.infinity,
                 child: Consumer<SettingsProvider>(
-                  builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+                  builder: (context, settingsProvider, _) => userModel == null
                       ? Center(child: CircularProgressIndicator())
                       : Image.network(
-                          settingsProvider.userModel?.cover ?? '',
+                          userModel?.cover ?? '',
                           fit: BoxFit.cover,
                         ),
                 ),
@@ -48,10 +48,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   radius: 70,
                   child: Consumer<SettingsProvider>(
-                    builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+                    builder: (context, settingsProvider, _) => userModel == null
                         ? Center(child: CircularProgressIndicator())
                         : CircleAvatar(
-                            backgroundImage: NetworkImage(settingsProvider.userModel?.image ?? ''),
+                            backgroundImage: NetworkImage(userModel?.image ?? ''),
                             radius: 66,
                           ),
                   ),
@@ -62,13 +62,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         SizedBox(height: 8.0),
         Consumer<SettingsProvider>(
-            builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+            builder: (context, settingsProvider, _) => userModel == null
                 ? Container(width: 10, height: 10, child: Center(child: CircularProgressIndicator()))
-                : Text(settingsProvider.userModel?.name ?? '', style: getTextTheme(context).subtitle1)),
+                : Text(userModel?.name ?? '', style: getTextTheme(context).subtitle1)),
         Consumer<SettingsProvider>(
-            builder: (context, settingsProvider, _) => settingsProvider.userModel == null
+            builder: (context, settingsProvider, _) => userModel == null
                 ? Container(width: 10, height: 10, child: Center(child: CircularProgressIndicator()))
-                : Text(settingsProvider.userModel?.bio ?? '', style: getTextTheme(context).caption, maxLines: 2)),
+                : Text(userModel?.bio ?? '', style: getTextTheme(context).caption, maxLines: 2)),
         SizedBox(height: 16),
         Row(
           mainAxisSize: MainAxisSize.max,

@@ -6,9 +6,10 @@ import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/models/auth/social_user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
+SocialUserModel? userModel;
+
 class SettingsProvider extends ChangeNotifier {
   //
-  SocialUserModel? userModel;
   Future<String> getUserData() async {
     try {
       final data = await FirebaseFirestore.instance.collection('users').doc(uid).get();

@@ -43,7 +43,5 @@ class HomeLayoutProvider extends ChangeNotifier {
     } catch (e) {
       return e.toString();
     }
-  }
-
-  
+  }  
 }
