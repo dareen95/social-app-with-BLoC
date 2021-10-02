@@ -12,6 +12,7 @@ class FeedProvider extends ChangeNotifier {
   List<PostModel> posts = [];
   Future<String> getPosts() async {
     try {
+      posts.clear();
       final postsMapped = await FirebaseFirestore.instance.collection('posts').get();
       for (var postMapped in postsMapped.docs) {
         posts.add(PostModel.fromMap(
@@ -24,6 +25,7 @@ class FeedProvider extends ChangeNotifier {
             return (await postMapped.reference.collection('likes').doc('likes').get()).data()?.length ?? 0;
           }(),
         ));
+        notifyListeners();
       }
       for (var element in posts) {
         final uid = element.uid;
@@ -31,7 +33,6 @@ class FeedProvider extends ChangeNotifier {
         final model = SocialUserModel.fromMap(data.data() ?? {});
         element.userImage = model.image ?? '';
       }
-
       notifyListeners();
       return 'success';
     } catch (e, s) {

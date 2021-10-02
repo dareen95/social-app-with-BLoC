@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_app/modules/feed/feed_provider.dart';
 import 'package:social_app/modules/new_post/new_post_provider.dart';
 import 'package:social_app/modules/settings/settings_provider.dart';
 import 'package:social_app/shared/components/reuseable_components.dart';
@@ -22,6 +23,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       builder: (context, postProvider, _) => WillPopScope(
         onWillPop: () async {
           postProvider.emptyImages();
+          Provider.of<FeedProvider>(context, listen: false).getPosts();
           return true;
         },
         child: Scaffold(
@@ -33,10 +35,12 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 onPressed: postProvider.isLoading
                     ? null
                     : () async {
+                        //TODO: Add hashtags
                         final result =
                             await postProvider.createPost(dateTime: DateTime.now().toString(), text: postTextController.text.trim(), hashtags: ['Technology']);
                         if (result == 'success') {
                           showSnackbar(context, 'post created successfully');
+
                           Navigator.of(context).pop();
                         } else {
                           showSnackbar(context, 'an error occurred');
